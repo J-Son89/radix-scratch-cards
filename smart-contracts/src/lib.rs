@@ -27,23 +27,17 @@ mod batchgenerator {
     struct BatchGenerator {
         current_batch: Vault,
         // batch_vault: Vault,
-        /// The resource address of all random cards
+
         // token_admin: Vault,
         scratch_card_resource_manager: ResourceManager,
         /// The price of each scratch card
         scratch_card_price: Decimal,
-        /// A counter for ID generation
-        // scratch_card_id_counter: u64,
         /// A vault that collects all XRD payments
         collected_xrd: Vault,
     }
     impl BatchGenerator {
         pub fn instantiate_scratchcard() -> Global<BatchGenerator> {
-            // let token_admin: FungibleBucket = ResourceBuilder::new_fungible(OwnerRole::None)
-            //     .divisibility(DIVISIBILITY_NONE)
-            //     .mint_initial_supply(1);
-
-            // Create an NFT resource with mutable supply
+            
             let (address_reservation, component_address) = Runtime::allocate_component_address(
                 BatchGenerator::blueprint_id()
             );
@@ -53,10 +47,9 @@ mod batchgenerator {
                     .metadata(
                         metadata!(
                         init {
-                            "name" => "Scratch Cards ".to_owned(), locked;
+                            "name" => "Scratch Cards".to_owned(), locked;
                         }
-                    )
-                    )
+                    ))
                     .mint_roles(
                         mint_roles!(
                         minter => rule!(require(global_caller(component_address)));
@@ -169,7 +162,7 @@ mod batchgenerator {
             local_id: Option<NonFungibleLocalId>
         ) -> (Bucket, Bucket) {
             assert!(nft_bucket.amount() == dec!("1"), "We can only scratch one card each time");
-            // Get and  the mutable data
+
             let nft_local_id: NonFungibleLocalId = match local_id {
                 Some(n) => n,
                 None => nft_bucket.as_non_fungible().non_fungible_local_id(),
