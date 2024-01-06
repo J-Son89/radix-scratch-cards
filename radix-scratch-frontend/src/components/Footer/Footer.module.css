@@ -1,0 +1,89 @@
+.footerContainer {
+  z-index: 5;
+  background-color: #0f0f10;
+  /* height: 4rem; */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.isHomePage {
+  background-color: transparent;
+}
+
+.logo {
+  padding: 8px;
+  color: #ffffff;
+  letter-spacing: -2px;
+  margin-left: 2rem;
+  margin-right: 8px;
+}
+
+.numbers {
+  font-family: "Poppins-Medium";
+}
+
+.letters {
+  font-family: "Poppins-ExtraBold";
+}
+.underline {
+  border-bottom: #ffffff 2.5px solid;
+}
+
+.dividerContainer {
+  display: flex;
+}
+
+.hidden {
+  display: none;
+}
+
+.email{
+  font-family: "Poppins-Medium";
+  color:white;
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+.logoContainer{
+  display: inline-flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.orange {
+  color: #fa7d09;
+}
+.email{
+  text-decoration: none;
+}
+
+@media only screen and (min-width: 481px) {
+  .email{ 
+    font-size: 1.25rem;
+    margin-right: 1.5rem;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .email{ 
+    font-size: 1.25rem;
+    margin-right: 1.5rem;
+  }
+}
+
+
+@media only screen and (min-width: 992px) {
+  .email{ 
+    font-size: 1.25rem;
+    margin-right: 1.5rem;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .email{ 
+    font-size: 1.25rem;
+    margin-right: 1.5rem;
+  }
+}
+
+

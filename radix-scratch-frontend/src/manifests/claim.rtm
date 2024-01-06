@@ -1,0 +1,42 @@
+CALL_METHOD
+  Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+  "lock_fee"
+  Decimal("10");
+
+# Withdraw NFT from primary account
+CALL_METHOD
+     Address("${acc1}") #Primary account 
+    "withdraw_non_fungibles"
+    Address("${nft}") # NFT address
+     Array<NonFungibleLocalId>(
+        NonFungibleLocalId("#${id}#")
+    );
+
+TAKE_FROM_WORKTOP 
+    Address("${nft}")  
+    Decimal("1") 
+    Bucket("bucket_nft");
+
+CALL_METHOD
+    Address("${acc1}") #Primary account 
+    "withdraw"
+    Address("resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3") # XRD address
+    Decimal("0");
+
+TAKE_FROM_WORKTOP 
+    Address("resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3") # XRD address
+    Decimal("0.0") 
+    Bucket("bucket_xrd");
+
+
+CALL_METHOD
+    Address("${comp}") #Primary account 
+    "claim_prize"
+    Bucket("bucket_nft")
+    Bucket("bucket_xrd")
+    None;
+
+CALL_METHOD
+    Address("${acc1}") 
+    "deposit_batch" 
+    Expression("ENTIRE_WORKTOP");

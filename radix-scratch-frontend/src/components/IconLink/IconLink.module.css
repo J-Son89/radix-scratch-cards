@@ -1,0 +1,35 @@
+.link {
+  text-decoration: none;
+}
+
+.logo {
+  padding: 8px;
+  color: #ffffff;
+  letter-spacing: -2px;
+  margin-left: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.numbers {
+  font-family: "Poppins-Medium";
+}
+
+.letters {
+  font-family: "Poppins-ExtraBold";
+}
+.underline {
+  border-bottom: #ffffff 2.5px solid;
+}
+
+
+@media only screen and (min-width: 481px) {
+  
+  .logo {
+    padding: 8px;
+    color: #ffffff;
+    letter-spacing: -2px;
+    margin-left: 2rem;
+    font-size: 2rem;
+
+  }
+}
