@@ -7,6 +7,7 @@ import {
   RadixNetwork,
 } from "@radixdlt/radix-dapp-toolkit";
 import { InstantiatePage } from "./pages/InstantiatePage";
+import { CreateBatch } from './pages/CreateBatch';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
@@ -17,6 +18,8 @@ import { AppStateProvider } from "./appState"
 // then use that account for your dAppDefinitionAddress
 const dAppDefinitionAddress =
   "account_tdx_2_129veu2mmz00sea702ku0vgttd52x34m39dz0ldvs5h0lksask44t6t";
+//move to config
+
 // Instantiate DappToolkit to connect to the Radix network and wallet
 const rdt = RadixDappToolkit({
   dAppDefinitionAddress: dAppDefinitionAddress,
@@ -66,7 +69,7 @@ const xrdAddress =
 //   }
 // }
 
-const componentAddressGlobal = "resource_tdx_2_1ntlevdappphsx3du34tg65mpglgzgl76xkpcgnaeg7ylr5k59e0pyw"
+const componentAddressGlobal = "component_tdx_2_1cpt9cy9j5mesmx8gdavay4k6r6j7ve8mzh4yjwueled8hey99fck2l"
 const ownerBadgeAddressGlobal = "consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29"
 const adminResourceAddressGlobal = "account_tdx_2_129veu2mmz00sea702ku0vgttd52x34m39dz0ldvs5h0lksask44t6t"
 
@@ -90,6 +93,8 @@ function App() {
         ...prev,
         account: walletData.accounts[0],
         rdt,
+        packageAddress: "package_tdx_2_1pk0r36pwvch7s0s5f89mmg2dvruhgveg8xmc2xy32ztu5p0jn7xtp6",
+        xrdResource: xrdAddress,
         setState
       }))
     })
@@ -103,7 +108,8 @@ function App() {
           <Header />
           <Routes>
             <Route path="instantiatePage" element={<InstantiatePage />} />
-
+            <Route path="createBatch" element={<CreateBatch />} />
+            CreateBatch
           </Routes>
           <Footer />
         </Router>
