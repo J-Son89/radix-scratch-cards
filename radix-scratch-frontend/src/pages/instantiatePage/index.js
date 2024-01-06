@@ -1,6 +1,10 @@
 import { useContext } from "react";
 import { appState } from "../../appState";
 import { instantiateManifest } from "../../manifests/instantiate";
+import styles from './style.module.css';
+import { PageTitle } from "../../components/PageTitle/PageTitle";
+import { Input } from "../../components/Input/Input";
+import { Button } from "../../components/Button/Button";
 
 // ************ Instantiate component and fetch component and resource addresses ************
 const instantiateComponent = async function ({
@@ -56,27 +60,34 @@ const instantiateComponent = async function ({
 };
 
 export const InstantiatePage = () => {
-  const {setState,rdt, account, componentAddress,ownerBadgeAddress, adminResourceAddress} = useContext(appState);
-    <div>
-        <h2>Instantiate Gumball Machine</h2>
-        <div class="flex">
-            <input type="text" placeholder="package address" id="packageAddress" />
-            <button onClick={() => instantiateComponent({
+    const {
+        setState,
+        rdt,
+        account,
+        componentAddress,
+        ownerBadgeAddress,
+        adminResourceAddress } = useContext(appState);
+    return <div>
+        <PageTitle label="Instantiate ScratchCard Batch"/>
+
+        <div className="flex">
+            <Input  placeholder="package address"/>
+            <Button onClick={() => instantiateComponent({
                 setState,
                 rdt,
                 accountAddress: account && account.address,
                 packageAddress: "package_tdx_2_1pk0r36pwvch7s0s5f89mmg2dvruhgveg8xmc2xy32ztu5p0jn7xtp6"
-            })} id="instantiateComponent">Instantiate Component</button>
+            })} id="instantiateComponent">Instantiate Component</Button>
         </div>
-        <div class="flex">
+        <div className={styles.detailContainer}>
             <p>Component address:</p>
             <pre id="componentAddress">{componentAddress || "None"}</pre>
         </div>
-        <div class="flex">
+        <div className={styles.detailContainer}>
             <p>Owner Badge address:</p>
             <pre id="ownerBadgeAddress">{ownerBadgeAddress || "None"}</pre>
         </div>
-        <div class="flex">
+        <div className={styles.detailContainer}>
             <p>Admin resource address:</p>
             <pre id="adminResourceAddress">{adminResourceAddress || "None"}</pre>
         </div>

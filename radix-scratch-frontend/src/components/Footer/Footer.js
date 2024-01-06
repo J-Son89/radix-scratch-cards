@@ -13,8 +13,8 @@ export const Footer = ({ }) => {
       <div className={styles.logoContainer}>
         <h1 className={styles.logo}>
           <span className={styles.underline}>
-            <span className={styles.number}>123</span>
-            <span className={styles.letters}>NFT</span>
+            <span className={styles.number}>Radix</span>
+            <span className={styles.letters}>Scratch</span>
           </span>
         </h1>
       </div>

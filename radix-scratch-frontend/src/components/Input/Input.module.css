@@ -1,0 +1,20 @@
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    margin: 0 auto;
+    border: solid 1px #3E3F43;
+    color:white;
+    background-color:#23242A;
+    border-radius: 5px;
+    font-family: 'Poppins-Medium';
+    padding: 8px;
+    font-size: 0.65rem;
+    text-align: left;
+}
+
+.input::placeholder {
+    color:#3E3F43;
+}

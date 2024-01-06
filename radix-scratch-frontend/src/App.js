@@ -6,7 +6,7 @@ import {
   DataRequestBuilder,
   RadixNetwork,
 } from "@radixdlt/radix-dapp-toolkit";
-import { InstantiatePage } from "./pages/instantiatePage";
+import { InstantiatePage } from "./pages/InstantiatePage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
