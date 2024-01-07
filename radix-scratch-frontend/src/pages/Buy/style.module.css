@@ -2,3 +2,7 @@
     flex: 1;
     color: white
 }
+
+.container {
+    flex:1;
+}

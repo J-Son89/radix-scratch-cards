@@ -1,23 +1,57 @@
-import { useContext } from "react";
-import styles from "./Header.module.css";
+import { useEffect, useState } from "react";
+import styles from "./ScratchCard.module.css";
 import cx from "classnames";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { IconLink } from "../IconLink/IconLink";
 import { appState } from "../../appState";
+import { SCRATCH_TYPE, ScratchCard } from 'scratchcard-js';
 
-const shortAddress = (address) => `${address.substring(0,3)}...${address.substring(address.length-3)}`
+export const RadixScratchCard = ({ cardId, index }) => {
+  const [percent, setPercent] = useState("0%")
+  useEffect(() => {
+    const container = document.getElementById(`#js--sc--container${index}`)
+    console.log(container.getElementsByClassName('sc__canvas').length > 0)
+    const isCanvasAlreadyThere = container.getElementsByClassName('sc__canvas').length > 0;
+    if (!isCanvasAlreadyThere) {
+      const sc = new ScratchCard(container, {
+        scratchType: SCRATCH_TYPE.BRUSH,
+        containerWidth: 300,
+        containerHeight: 300,
+        brushSrc: 'coin.png',
+        imageForwardSrc: 'scratchcard.png',
+        imageBackgroundSrc: '',
+        clearZoneRadius: 0,
+        callback: function () {
+          // alert('Now the window will reload !')
+        },
+      })
 
-export const Header = ({ }) => {
-  const [state] = useContext(appState);
+      const initScratching = async () => {
+        sc.init().then(() => {
+          sc.canvas.addEventListener('scratch.move', () => {
+            let newPercent = sc.getPercent().toFixed(0);
+            setPercent(newPercent + '%');
+          })
+        }).catch((error) => {
+          alert(error.message);
+        });
+      }
+      initScratching()
+    }
+  },
+    [],)
 
-  const { pathname } = useLocation();
   return (
-    <div
-      className={styles.scratchCard} 
-    >
-     
+    <div>
 
+      <div className={styles.sc__wrapper}>
+        <div id={`#js--sc--container${index}`} className={styles.sc__container}>
+          <p>WINNER</p>
+          {/* <img src={'./scratchcard-background.png'} className={styles.sc__img} /> */}
+        </div>
+
+      </div>
+      <div className={styles.sc__infos}>
+        {percent}
+      </div>
     </div>
   );
 };

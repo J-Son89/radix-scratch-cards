@@ -2,12 +2,13 @@ import { useContext, useEffect } from "react";
 import { appState } from "../../appState";
 import { purchaseManifest } from "../../manifests/purchase";
 // import { getScratchCardsToBuyManifest } from "../../manifests/getScratchCardsToBuy";
-import { get } from 'lodash';
+import { get, isArray } from 'lodash';
 
 import styles from './style.module.css';
 import { PageTitle } from "../../components/PageTitle/PageTitle";
 import { Input } from "../../components/Input/Input";
 import { Button } from "../../components/Button/Button";
+import { RadixScratchCard } from "../../components/ScratchCard/ScratchCard";
 
 const get_internal_vault_address = async (address, resource_address) => {
     if (!address || !resource_address) {
@@ -24,7 +25,7 @@ const get_internal_vault_address = async (address, resource_address) => {
     const response = await fetch("https://stokenet.radixdlt.com/state/entity/page/non-fungible-vaults/", requestOptions)
     const jsonResponse = await response.json()
     console.log(jsonResponse, '===')
-    const scratchcard_vault_address = get(jsonResponse, ['items' , '0', 'vault_address'])
+    const scratchcard_vault_address = get(jsonResponse, ['items', '0', 'vault_address'])
     return scratchcard_vault_address
 }
 
@@ -44,7 +45,6 @@ const get_users_cards_ids = async (address, resource_address, vault_address) => 
     };
     const response = await fetch("https://stokenet.radixdlt.com/state/entity/page/non-fungible-vault/ids", requestOptions)
     const jsonResponse = await response.json()
-    console.log(jsonResponse)
     const users_cards_ids = get(jsonResponse, ['items'])
     return users_cards_ids
 }
@@ -121,13 +121,12 @@ export const Buy = ({ }) => {
         usersCardsIds,
         adminResourceAddress }, setState] = useContext(appState);
 
-
     useEffect(() => {
         const getCards = async (address, nftResourceAddress) => {
             console.log('address', address)
-            console.log('nftResourceAddress',nftResourceAddress)
+            console.log('nftResourceAddress', nftResourceAddress)
             const internal_vault_address = await get_internal_vault_address(address, nftResourceAddress)
-            console.log('internal_vault_address',internal_vault_address)
+            console.log('internal_vault_address', internal_vault_address)
 
             const usersCardsIds = await get_users_cards_ids(address, nftResourceAddress, internal_vault_address)
             setState(prev =>
@@ -145,8 +144,7 @@ export const Buy = ({ }) => {
     return <div>
         <PageTitle label="Create Scratch Cards Batch" />
 
-        <div className="flex">
-            <Input placeholder="package address" />
+        <div className={styles.container}>
             <Button onClick={() => buyScratchCard({
                 setState,
                 rdt,
@@ -156,17 +154,11 @@ export const Buy = ({ }) => {
                 accountAddress: account && account.address,
             })} id="purchaseButton">Buy ScratchCard</Button>
         </div>
-        <div className={styles.detailContainer}>
-            <p>Component address:</p>
-            <pre id="componentAddress">{componentAddress || "None"}</pre>
-        </div>
-        <div className={styles.detailContainer}>
-            <p>Owner Badge address:</p>
-            <pre id="ownerBadgeAddress">{ownerBadgeAddress || "None"}</pre>
-        </div>
-        <div className={styles.detailContainer}>
-            <p>Admin resource address:</p>
-            <pre id="adminResourceAddress">{adminResourceAddress || "None"}</pre>
+        <div className={styles.container}>
+            {isArray(usersCardsIds) && usersCardsIds.map((cardId, index) =>
+                <RadixScratchCard cardId={cardId} index={index} key={index +cardId} isScratched={false} isClaimed={false} />
+            )}
+
         </div>
     </div >
 }
