@@ -60,14 +60,14 @@ const instantiateComponent = async function ({
 };
 
 export const InstantiatePage = () => {
-    const {
-        setState,
+    const [{
+        
         rdt,
         account,
         componentAddress,
         ownerBadgeAddress,
         packageAddress,
-        adminResourceAddress } = useContext(appState);
+        adminResourceAddress },setState] = useContext(appState);
     return <div>
         <PageTitle label="Instantiate ScratchCard Batch"/>
 

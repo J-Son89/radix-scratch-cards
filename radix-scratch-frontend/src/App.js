@@ -8,6 +8,7 @@ import {
 } from "@radixdlt/radix-dapp-toolkit";
 import { InstantiatePage } from "./pages/InstantiatePage";
 import { CreateBatch } from './pages/CreateBatch';
+import { Buy } from './pages/Buy';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
@@ -77,8 +78,7 @@ function App() {
   const [state, setState] = useState({
     componentAddress: componentAddressGlobal,
     ownerBadgeAddress: ownerBadgeAddressGlobal,
-    adminResourceAddress: adminResourceAddressGlobal // TO persist from DB
-
+    adminResourceAddress: adminResourceAddressGlobal, // TO persist from DB
   })
 
   useEffect(() => {
@@ -91,24 +91,27 @@ function App() {
 
       setState((prev) => ({
         ...prev,
+        walletData,
         account: walletData.accounts[0],
         rdt,
+        nftAddress: "resource_tdx_2_1nf736gc5vfugaf2axcwrugjh3wz864tfk29907mxn5890lwpfw3gdc",
         packageAddress: "package_tdx_2_1pk0r36pwvch7s0s5f89mmg2dvruhgveg8xmc2xy32ztu5p0jn7xtp6",
         xrdResource: xrdAddress,
-        setState
       }))
     })
   },
     [])
 
   return (
-    <AppStateProvider value={state}>
+    <AppStateProvider value={[state, setState]}>
       <div className="App">
         <Router>
           <Header />
           <Routes>
             <Route path="instantiatePage" element={<InstantiatePage />} />
             <Route path="createBatch" element={<CreateBatch />} />
+            <Route path="buyPage" element={<Buy />} />
+
             CreateBatch
           </Routes>
           <Footer />

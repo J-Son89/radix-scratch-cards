@@ -9,7 +9,7 @@ import { appState } from "../../appState";
 const shortAddress = (address) => `${address.substring(0,3)}...${address.substring(address.length-3)}`
 
 export const Header = ({ }) => {
-  const state = useContext(appState);
+  const [state] = useContext(appState);
 
   const { pathname } = useLocation();
   return (
@@ -25,6 +25,9 @@ export const Header = ({ }) => {
       </Link>
       <Link className={styles.normalLink} to={"createBatch"}>
         Make Batch
+      </Link>
+      <Link className={cx(styles.normalLink, styles.firstLink)} to={"buyPage"}>
+        Buy Page
       </Link>
     
 

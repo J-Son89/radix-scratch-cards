@@ -27,7 +27,7 @@ mod batchgenerator {
     struct BatchGenerator {
         current_batch: Vault,
         // batch_vault: Vault,
-
+        batch_address: ResourceAddress,
         // token_admin: Vault,
         scratch_card_resource_manager: ResourceManager,
         /// The price of each scratch card
@@ -37,7 +37,6 @@ mod batchgenerator {
     }
     impl BatchGenerator {
         pub fn instantiate_scratchcard() -> Global<BatchGenerator> {
-            
             let (address_reservation, component_address) = Runtime::allocate_component_address(
                 BatchGenerator::blueprint_id()
             );
@@ -54,24 +53,22 @@ mod batchgenerator {
                         mint_roles!(
                         minter => rule!(require(global_caller(component_address)));
                         minter_updater => rule!(deny_all);
-                    )
-                    )
+                    ))
                     .burn_roles(
                         burn_roles!(
                         burner => rule!(require(global_caller(component_address)));
                         burner_updater => rule!(deny_all);
-                    )
-                    )
+                    ))
                     .non_fungible_data_update_roles(
                         non_fungible_data_update_roles!(
                         non_fungible_data_updater => rule!(require(global_caller(component_address)));
                         non_fungible_data_updater_updater => rule!(deny_all);
-                    )
-                    )
+                    ))
                     .create_with_no_initial_supply();
 
             (Self {
                 scratch_card_resource_manager,
+                batch_address: scratch_card_resource_manager.address(),
                 current_batch: Vault::new(scratch_card_resource_manager.address()),
                 scratch_card_price: (50).into(),
                 collected_xrd: Vault::new(XRD),
@@ -92,6 +89,10 @@ mod batchgenerator {
                 );
                 self.current_batch.put(new_card);
             }
+        }
+
+        pub fn get_batches(&self) -> Vault {
+            self.batch_address
         }
 
         pub fn purchase(&mut self, mut payment: Bucket) -> (Bucket, Bucket) {
