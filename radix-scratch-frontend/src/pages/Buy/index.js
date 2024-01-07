@@ -1,53 +1,18 @@
 import { useContext, useEffect } from "react";
 import { appState } from "../../appState";
 import { purchaseManifest } from "../../manifests/purchase";
-// import { getScratchCardsToBuyManifest } from "../../manifests/getScratchCardsToBuy";
-import { get, isArray } from 'lodash';
+import { scratchManifest } from "../../manifests/scratch";
+import { get,set, isArray } from 'lodash';
 
 import styles from './style.module.css';
 import { PageTitle } from "../../components/PageTitle/PageTitle";
-import { Input } from "../../components/Input/Input";
 import { Button } from "../../components/Button/Button";
 import { RadixScratchCard } from "../../components/ScratchCard/ScratchCard";
-
-const get_internal_vault_address = async (address, resource_address) => {
-    if (!address || !resource_address) {
-        return ""
-    }
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            address,
-            resource_address
-        })
-    };
-    const response = await fetch("https://stokenet.radixdlt.com/state/entity/page/non-fungible-vaults/", requestOptions)
-    const jsonResponse = await response.json()
-    console.log(jsonResponse, '===')
-    const scratchcard_vault_address = get(jsonResponse, ['items', '0', 'vault_address'])
-    return scratchcard_vault_address
-}
-
-const get_users_cards_ids = async (address, resource_address, vault_address) => {
-    if (!address || !resource_address) {
-        return ""
-    }
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            address,
-            resource_address,
-            vault_address
-
-        })
-    };
-    const response = await fetch("https://stokenet.radixdlt.com/state/entity/page/non-fungible-vault/ids", requestOptions)
-    const jsonResponse = await response.json()
-    const users_cards_ids = get(jsonResponse, ['items'])
-    return users_cards_ids
-}
+import {
+    get_internal_vault_address,
+    get_users_cards_ids,
+    get_users_cards_data
+} from '../../api';
 
 const buyScratchCard = async ({
     componentAddress,
@@ -84,30 +49,56 @@ const buyScratchCard = async ({
     console.log("Purchase committed details:", committedDetails);
 }
 
-// const getScratchCardsToBuy = async ({
-//     componentAddress,
-//     accountAddress,
-//     xrdResource,
-//     setState,
-//     rdt }) => {
-//     const manifest = getScratchCardsToBuyManifest(
-//         accountAddress,
-//         xrdResource,
-//         componentAddress)
-//     console.log("Instantiate Manifest: ", manifest);
+export const scratchACard = async ({
+    accountAddress,
+    nftAddress,
+    componentAddress,
+    cardId,
+    rdt,
+    setState
+}) => {
 
-//     const result = await rdt.walletApi.sendTransaction({
-//         transactionManifest: manifest,
-//         version: 1,
-//     });
-//     if (result.isErr()) throw result.error;
-//     console.log("Instantiate Result: ", result.value);
-//     return result
-// }
+    const manifest = scratchManifest(
+        accountAddress,
+        nftAddress,
+        componentAddress,
+        cardId)
+    console.log("Scratch Manifest: ", manifest);
 
-const viewMyScratchCards = () => {
+    // Send manifest to wallet for signing
+    const result = await rdt.walletApi.sendTransaction({
+        transactionManifest: manifest,
+        version: 1,
+    });
+    if (result.isErr()) throw result.error;
+    console.log("Scratch Result: ", result.value);
 
+    // Fetch the transaction status from the Gateway API
+    const transactionStatus = await rdt.gatewayApi.transaction.getStatus(
+        result.value.transactionIntentHash
+    );
+    console.log("Scratch transaction status:", transactionStatus);
+
+    // Fetch the details of changes committed to ledger from Gateway API
+    const committedDetails = await rdt.gatewayApi.transaction.getCommittedDetails(
+        result.value.transactionIntentHash
+    );
+    setState(prev => {
+        const updatedCardDetails = get(prev, ['usersCards'])
+        const isScratchedData = get(prev, ['usersCards',cardId , 'is_scratched'])
+        set(updatedCardDetails, ['usersCards', cardId, 'is_scratched'], {
+            value: true,
+            ...isScratchedData
+        })
+        return ({
+            ...prev,
+            usersCards:updatedCardDetails
+
+        })
+    })
+    console.log("Scratch committed details:", committedDetails);
 }
+
 
 export const Buy = ({ }) => {
     const [{
@@ -119,7 +110,9 @@ export const Buy = ({ }) => {
         xrdResource,
         walletData,
         usersCardsIds,
-        adminResourceAddress }, setState] = useContext(appState);
+        usersCards,
+        adminResourceAddress },
+        setState] = useContext(appState);
 
     useEffect(() => {
         const getCards = async (address, nftResourceAddress) => {
@@ -129,17 +122,22 @@ export const Buy = ({ }) => {
             console.log('internal_vault_address', internal_vault_address)
 
             const usersCardsIds = await get_users_cards_ids(address, nftResourceAddress, internal_vault_address)
-            setState(prev =>
-            ({
-                ...prev,
-                usersCardsIds
-            }))
+
+            const usersCardsData = await get_users_cards_data(nftResourceAddress, usersCardsIds)
+            console.log(usersCardsData)
+            setState(prev => {
+
+                return {
+                    ...prev,
+                    usersCards: usersCardsData,
+                    usersCardsIds
+                }
+            })
         }
         getCards(get(account, ['address']), nftAddress)
 
     }, [componentAddress])
 
-    console.log(usersCardsIds)
 
     return <div>
         <PageTitle label="Create Scratch Cards Batch" />
@@ -155,8 +153,23 @@ export const Buy = ({ }) => {
             })} id="purchaseButton">Buy ScratchCard</Button>
         </div>
         <div className={styles.container}>
-            {isArray(usersCardsIds) && usersCardsIds.map((cardId, index) =>
-                <RadixScratchCard cardId={cardId} index={index} key={index +cardId} isScratched={false} isClaimed={false} />
+            <h4 className={styles.myCardsTitle}>My Cards </h4>
+            {isArray(usersCardsIds) && (Object.entries(usersCards)).map(([cardId, cardData], index) =>
+                <RadixScratchCard
+                    onScratch={() => scratchACard({
+                        accountAddress: get(account, ['address']),
+                        nftAddress,
+                        componentAddress,
+                        cardId,
+                        rdt,
+                        setState
+                    })}
+                    isScratched={get(cardData, ['is_scratched', 'value'])}
+                    isClaimed={get(cardData, ['is_claimed', 'value'])}
+
+                    cardId={cardId}
+                    index={index}
+                    key={index + cardId} />
             )}
 
         </div>

@@ -97,6 +97,7 @@ function App() {
         nftAddress: "resource_tdx_2_1nf736gc5vfugaf2axcwrugjh3wz864tfk29907mxn5890lwpfw3gdc",
         packageAddress: "package_tdx_2_1pk0r36pwvch7s0s5f89mmg2dvruhgveg8xmc2xy32ztu5p0jn7xtp6",
         xrdResource: xrdAddress,
+        usersCards:{}
       }))
     })
   },

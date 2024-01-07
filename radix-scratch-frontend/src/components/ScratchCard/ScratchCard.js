@@ -4,8 +4,9 @@ import cx from "classnames";
 import { appState } from "../../appState";
 import { SCRATCH_TYPE, ScratchCard } from 'scratchcard-js';
 
-export const RadixScratchCard = ({ cardId, index }) => {
+export const RadixScratchCard = ({ cardId, index, onScratch = () => { }, isScratched }) => {
   const [percent, setPercent] = useState("0%")
+  const [isScratchedOnce, setScratchedOnce] = useState(false)
   useEffect(() => {
     const container = document.getElementById(`#js--sc--container${index}`)
     console.log(container.getElementsByClassName('sc__canvas').length > 0)
@@ -40,18 +41,27 @@ export const RadixScratchCard = ({ cardId, index }) => {
     [],)
 
   return (
-    <div>
-
+    <>
+    <div className={styles.outerContainer}>
+ 
       <div className={styles.sc__wrapper}>
+       <p className={styles.cardId}>{cardId}</p> 
+      {!isScratched && (<div className={styles.signAndScratch}>
+        <button className={styles.signAndScratchBtn}
+        onClick={onScratch}
+        >Sign & Scratch</button>
+      </div>)}
         <div id={`#js--sc--container${index}`} className={styles.sc__container}>
           <p>WINNER</p>
           {/* <img src={'./scratchcard-background.png'} className={styles.sc__img} /> */}
         </div>
 
       </div>
+      </div>
+
       <div className={styles.sc__infos}>
         {percent}
       </div>
-    </div>
+    </>
   );
 };
