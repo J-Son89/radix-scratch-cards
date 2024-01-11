@@ -2,12 +2,15 @@ import { useContext, useEffect } from "react";
 import { appState } from "../../appState";
 import { purchaseManifest } from "../../manifests/purchase";
 import { scratchManifest } from "../../manifests/scratch";
-import { get,set, isArray } from 'lodash';
+import { claimManifest } from "../../manifests/claim";
+import { get, set, isArray } from 'lodash';
 
 import styles from './style.module.css';
 import { PageTitle } from "../../components/PageTitle/PageTitle";
 import { Button } from "../../components/Button/Button";
 import { RadixScratchCard } from "../../components/ScratchCard/ScratchCard";
+import { ScratchCardsCarousel } from "../../components/ScratchCardsCarousel/ScratchCardsCarousel";
+
 import {
     get_internal_vault_address,
     get_users_cards_ids,
@@ -49,6 +52,61 @@ const buyScratchCard = async ({
     console.log("Purchase committed details:", committedDetails);
 }
 
+export const claimPrize = async ({
+    accountAddress,
+    nftAddress,
+    componentAddress,
+    cardId,
+    rdt,
+    xrdAddress,
+    setState
+}) => {
+
+    const manifest = claimManifest({
+        accountAddress,
+        nftAddress,
+        componentAddress,
+        cardId,
+        xrdAddress
+    })
+    console.log("Claim Manifest: ", manifest);
+
+    // Send manifest to wallet for signing
+    const result = await rdt.walletApi.sendTransaction({
+        transactionManifest: manifest,
+        version: 1,
+    })
+    if (result.isErr()) throw result.error;
+    console.log("Claim Result: ", result.value);
+
+    // Fetch the transaction status from the Gateway API
+    const transactionStatus = await rdt.gatewayApi.transaction.getStatus(
+        result.value.transactionIntentHash
+    );
+    console.log("Claim transaction status:", transactionStatus);
+
+    // Fetch the details of changes committed to ledger from Gateway API
+    const committedDetails = await rdt.gatewayApi.transaction.getCommittedDetails(
+        result.value.transactionIntentHash
+    );
+    console.log("Claim transaction status:", committedDetails);
+
+
+    setState(prev => {
+        const updatedCardDetails = get(prev, ['usersCards'])
+        const isClaimedData = get(prev, ['usersCards', cardId, 'is_claimed'])
+        set(updatedCardDetails, ['usersCards', cardId, 'is_claimed'], {
+            value: true,
+            ...isClaimedData
+        })
+        return ({
+            ...prev,
+            usersCards: updatedCardDetails
+
+        })
+    })
+}
+
 export const scratchACard = async ({
     accountAddress,
     nftAddress,
@@ -85,20 +143,21 @@ export const scratchACard = async ({
     );
     setState(prev => {
         const updatedCardDetails = get(prev, ['usersCards'])
-        const isScratchedData = get(prev, ['usersCards',cardId , 'is_scratched'])
+        const isScratchedData = get(prev, ['usersCards', cardId, 'is_scratched'])
         set(updatedCardDetails, ['usersCards', cardId, 'is_scratched'], {
             value: true,
             ...isScratchedData
         })
         return ({
             ...prev,
-            usersCards:updatedCardDetails
+            usersCards: updatedCardDetails
 
         })
     })
     console.log("Scratch committed details:", committedDetails);
 }
 
+const handleDragStart = (e) => e.preventDefault();
 
 export const Buy = ({ }) => {
     const [{
@@ -114,10 +173,40 @@ export const Buy = ({ }) => {
         adminResourceAddress },
         setState] = useContext(appState);
 
+    const radixScratchCards = (isArray(usersCardsIds) &&
+        (Object.entries(usersCards)).map(([cardId, cardData], index) =>
+            <RadixScratchCard
+                onScratch={() => scratchACard({
+                    accountAddress: get(account, ['address']),
+                    nftAddress,
+                    componentAddress,
+                    cardId,
+                    rdt,
+                    setState
+                })}
+                onClaim={() => {
+                    claimPrize({
+                        accountAddress: get(account, ['address']),
+                        nftAddress,
+                        componentAddress,
+                        cardId,
+                        rdt,
+                        xrdAddress: xrdResource,
+                        setState
+                    })
+                }}
+                handleDragStart={handleDragStart}
+                isScratched={get(cardData, ['is_scratched', 'value'])}
+                isClaimed={get(cardData, ['is_claimed', 'value'])}
+                prize={get(cardData, ["prize", "variant_name"])}
+                cardId={cardId}
+                index={index}
+                key={index + cardId} />
+        )) || []
+
+
     useEffect(() => {
         const getCards = async (address, nftResourceAddress) => {
-            console.log('address', address)
-            console.log('nftResourceAddress', nftResourceAddress)
             const internal_vault_address = await get_internal_vault_address(address, nftResourceAddress)
             console.log('internal_vault_address', internal_vault_address)
 
@@ -126,7 +215,6 @@ export const Buy = ({ }) => {
             const usersCardsData = await get_users_cards_data(nftResourceAddress, usersCardsIds)
             console.log(usersCardsData)
             setState(prev => {
-
                 return {
                     ...prev,
                     usersCards: usersCardsData,
@@ -154,23 +242,8 @@ export const Buy = ({ }) => {
         </div>
         <div className={styles.container}>
             <h4 className={styles.myCardsTitle}>My Cards </h4>
-            {isArray(usersCardsIds) && (Object.entries(usersCards)).map(([cardId, cardData], index) =>
-                <RadixScratchCard
-                    onScratch={() => scratchACard({
-                        accountAddress: get(account, ['address']),
-                        nftAddress,
-                        componentAddress,
-                        cardId,
-                        rdt,
-                        setState
-                    })}
-                    isScratched={get(cardData, ['is_scratched', 'value'])}
-                    isClaimed={get(cardData, ['is_claimed', 'value'])}
+            <ScratchCardsCarousel items={radixScratchCards} />
 
-                    cardId={cardId}
-                    index={index}
-                    key={index + cardId} />
-            )}
 
         </div>
     </div >

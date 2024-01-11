@@ -1,6 +1,7 @@
 .outerContainer {
   position: relative;
   max-width: 300px;
+
 }
 
 .sc__inner {
@@ -82,4 +83,20 @@
   right: 0;
   z-index: 2;
   pointer-events: none;
+}
+
+.claimed {
+  color:red;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: black;
+  height: 60px;
+  width: 80px; 
+  z-index: 4; 
+}
+
+.prize {
+  color:gold;
+  margin-top: 8rem;
 }

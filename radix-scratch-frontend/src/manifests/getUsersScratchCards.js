@@ -1,6 +1,6 @@
 export const getUsersScratchCards = (
     accountAddress,
-    xrdAddress,
+    nftAddress,
     componentAddress,
   ) => `
 CALL_METHOD
@@ -25,3 +25,5 @@ CALL_METHOD
     Expression("ENTIRE_WORKTOP")
     ;
 `
+
+
