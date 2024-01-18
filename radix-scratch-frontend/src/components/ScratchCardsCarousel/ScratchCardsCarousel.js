@@ -1,11 +1,27 @@
-import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
+import React, { useRef, useState } from 'react';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+import  './ScratchCardsCarousel.css'
+// Import Swiper styles
+import 'swiper/css';
+// import 'swiper/css/scrollbar';
+// import 'swiper/css/navigation';
+// import 'swiper/css/pagination';
 
-const handleDragStart = (e) => e.preventDefault();
 
-export const ScratchCardsCarousel = ({items}) => {
-    console.log(items)
-  return (
-    <AliceCarousel controlsStrategy={"alternate"} autoWidth mouseTracking items={items} />
+// import required modules
+import { Keyboard, Scrollbar, Navigation, Pagination } from 'swiper/modules';
+
+export const ScratchCardsCarousel = ({ items }) => {
+  return (<Swiper
+       spaceBetween={50}
+    slidesPerView={3}
+    onSlideChange={() => console.log('slide change')}
+    onSwiper={(swiper) => console.log(swiper)}
+  
+  >
+    {items}
+  </Swiper>
+
   );
 }

@@ -11,9 +11,11 @@
     "react": "^18.2.0",
     "react-alice-carousel": "^2.8.0",
     "react-dom": "^18.2.0",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "scratchcard-js": "^1.5.5",
+    "swiper": "^11.0.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
