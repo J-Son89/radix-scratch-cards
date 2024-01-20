@@ -1,0 +1,8 @@
+.container {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 2fr;
+    margin: auto;
+    justify-content: center;
+    background-color: #23242a;
+    height: 100%;
+}

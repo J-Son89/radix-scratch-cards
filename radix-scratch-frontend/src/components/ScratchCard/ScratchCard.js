@@ -19,7 +19,6 @@ export const RadixScratchCard = ({
 
 
   useEffect(() => {
-
     const container = document.getElementById(`#js--sc--container${index}`)
     const isCanvasAlreadyThere = container.getElementsByClassName('sc__canvas').length > 0;
     if (!isCanvasAlreadyThere && inPresentationMode) {
@@ -36,6 +35,7 @@ export const RadixScratchCard = ({
 
       const initScratching = async () => {
         sc.init().then(() => {
+          
           sc.canvas.addEventListener('scratch.move', () => {
             let newPercent = sc.getPercent().toFixed(0);
           })
@@ -52,7 +52,7 @@ export const RadixScratchCard = ({
     <>
       <div className={styles.outerContainer} handleDragStart={handleDragStart}>
         {inPresentationMode && isClaimed && <div className={styles.claimed} ><p>Claimed</p></div>}
-        <div className={styles.sc__wrapper} onClick={!inPresentationMode && onClickPreview}>
+        <div className={styles.sc__wrapper} >
           <p className={styles.cardId}>{cardId}</p>
           {inPresentationMode && !isScratched && (<div className={styles.signAndScratch}>
             <button className={styles.signAndScratchBtn}
