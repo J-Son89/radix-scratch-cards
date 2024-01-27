@@ -7,6 +7,10 @@ body {
   width: auto;
 }
 
+.pageContainer {
+  height: 80vh;
+  background-image: url("../public/background.png");
+}
 
 @font-face {
   font-family: "Poppins-ExtraBold";

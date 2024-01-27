@@ -8,17 +8,14 @@ import styles from "./ScratchCardsCarousel.module.css";
 
 
 export const ScratchCardsCarousel = ({ items, activeIndex, setActiveIndex, onClick }) => {
-  const [cardId, cardData] = useMemo(() => get(items, [activeIndex], []), [activeIndex])
+  const [cardId, cardData] = useMemo(() => get(items, [activeIndex], []), [items,activeIndex])
 
   const showLeftArrow = activeIndex > 0
   const showRightArrow = activeIndex < items.length - 1
 
-  return (
-    <div>
-      {cardId &&
+  return (cardId &&
         <div style={{
-          position: "absolute",
-          left: "Calc(50% - 6rem)",
+          // left: "Calc(50% - 6rem)",
           display: "flex"
         }}>
           <div className={styles.btnContainer}>
@@ -34,7 +31,6 @@ export const ScratchCardsCarousel = ({ items, activeIndex, setActiveIndex, onCli
            
           }}>
             <RadixScratchCard
-              isScratched={get(cardData, ['is_scratched', 'value'])}
               isClaimed={get(cardData, ['is_claimed', 'value'])}
               prize={get(cardData, ["prize", "variant_name"])}
               cardId={cardId}
@@ -47,7 +43,6 @@ export const ScratchCardsCarousel = ({ items, activeIndex, setActiveIndex, onCli
               onClick={() => setActiveIndex(activeIndex + 1)}
               className={styles.arrow} />}
           </div>
-        </div>}
-    </div>
-  );
+        </div>
+  )
 }
