@@ -7,7 +7,7 @@ import {
   RadixNetwork,
 } from "@radixdlt/radix-dapp-toolkit";
 import { AdminPage } from "./pages/AdminPage";
-import { CreateBatch } from './pages/CreateBatch';
+import { SellerPage } from './pages/SellerPage';
 import { Buy } from './pages/Buy';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header/Header";
@@ -31,6 +31,9 @@ const applicationName = process.env.REACT_APP_APPLICATION_NAME;
 const applicationVersion = process.env.REACT_APP_APPLICATION_VERSION;
 const nftAddress = process.env.REACT_APP_NFT_ADDRESS;
 const packageAddress = process.env.REACT_APP_PACKAGE_ADDRESS;
+
+const sellerId= process.env.REACT_APP_SELLER_ID;
+
 // Instantiate DappToolkit to connect to the Radix network and wallet
 const rdt = RadixDappToolkit({
   dAppDefinitionAddress: dAppDefinitionAddress,
@@ -62,11 +65,11 @@ function App() {
         nftAddress: nftAddress,
         packageAddress: packageAddress,
         xrdResource: xrdAddress,
+        sellerId,
         usersCards: {}
       }))
     })
-  },
-    [])
+  }, [])
 
   return (
     <AppStateProvider value={[state, setState]}>
@@ -75,10 +78,8 @@ function App() {
           <Header />
           <Routes>
             <Route path="adminPage" element={<AdminPage />} />
-            <Route path="createBatch" element={<CreateBatch />} />
+            <Route path="sellerPage" element={<SellerPage />} />
             <Route path="buyPage" element={<Buy />} />
-
-            CreateBatch
           </Routes>
           <Footer />
         </Router>

@@ -23,8 +23,8 @@ export const Header = ({ }) => {
       <Link className={cx(styles.normalLink, styles.firstLink)} to={"adminPage"}>
         Admin
       </Link>
-      <Link className={styles.normalLink} to={"createBatch"}>
-        Make Batch
+      <Link className={styles.normalLink} to={"sellerPage"}>
+        Seller
       </Link>
       <Link className={cx(styles.normalLink, styles.firstLink)} to={"buyPage"}>
         Buy Page

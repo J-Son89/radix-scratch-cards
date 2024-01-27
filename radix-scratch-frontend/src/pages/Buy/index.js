@@ -20,14 +20,15 @@ const buyScratchCard = async ({
     componentAddress,
     accountAddress,
     xrdResource,
-    nftAddress,
-    setState,
+    sellerId,
     rdt
 }) => {
-    const manifest = purchaseManifest(
+    const manifest = purchaseManifest({
         accountAddress,
-        xrdResource,
-        componentAddress)
+        xrdAddress: xrdResource,
+        componentAddress,
+        sellerId,
+    })
     console.log("Instantiate Manifest: ", manifest);
 
     // Send manifest to wallet for signing
@@ -166,6 +167,7 @@ export const Buy = ({ }) => {
         ownerBadgeAddress,
         nftAddress,
         xrdResource,
+        sellerId,
         walletData,
         usersCardsIds,
         usersCards,
@@ -237,6 +239,7 @@ export const Buy = ({ }) => {
                     xrdResource,
                     nftAddress,
                     componentAddress,
+                    sellerId,
                     accountAddress: account && account.address,
                 })} id="purchaseButton">Buy ScratchCard</Button>
         </div>
@@ -252,7 +255,7 @@ export const Buy = ({ }) => {
         <ScratchModal modalIsOpen={modalIsOpen}
             afterOpenModal={afterOpenModal}
             closeModal={closeModal}>
-            <div style={{flex: 1}}>
+            <div style={{ flex: 1 }}>
 
                 <h1>Scratch Your Card</h1>
                 <RadixScratchCard
