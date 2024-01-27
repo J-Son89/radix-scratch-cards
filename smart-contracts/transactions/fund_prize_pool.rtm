@@ -3,24 +3,22 @@ CALL_METHOD
   "lock_fee"
   Decimal("10");
 
-# Withdraw XRD from primary account
+  # Withdraw XRD from primary account
 CALL_METHOD
     Address("${acc1}") #Primary account 
     "withdraw"
     Address("resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3") # XRD address
-    Decimal("55");
+    Decimal("1000");
 
 TAKE_FROM_WORKTOP 
-    Address("resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3") # XRD address
-    Decimal("55.0") 
+    Address("resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3")
+    Decimal("1000") 
     Bucket("bucket_a");
 
 CALL_METHOD
     Address("${comp}") #Primary account 
-    "purchase"
-    Bucket("bucket_a")
-    0u64
-    ; # XRD address;
+    "fund_prize_pool"
+    Bucket("bucket_a"); # XRD address;
 
 CALL_METHOD
     Address("${acc1}")
