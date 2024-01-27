@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { appState } from "../../appState";
 import { purchaseManifest } from "../../manifests/purchase";
 import { scratchManifest } from "../../manifests/scratch";
 import { claimManifest } from "../../manifests/claim";
 import { get, set, isArray } from 'lodash';
 import styles from './style.module.css';
-import { PageTitle } from "../../components/PageTitle/PageTitle";
+import { ScratchModal } from "../../components/Modal/Modal";
 import { Button } from "../../components/Button/Button";
-import { RadixScratchCard } from "../../components/ScratchCard/ScratchCard";
 import { ScratchCardsCarousel } from "../../components/ScratchCardsCarousel/ScratchCardsCarousel";
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { RadixScratchCard } from "../../components/ScratchCard/ScratchCard";
 
 import {
     get_internal_vault_address,
@@ -174,6 +173,7 @@ export const Buy = ({ }) => {
         setState] = useContext(appState);
 
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0)
 
     function openModal() {
         setIsOpen(true);
@@ -188,40 +188,8 @@ export const Buy = ({ }) => {
         setIsOpen(false);
     }
 
-
     const radixScratchCards = (isArray(usersCardsIds) &&
-        (Object.entries(usersCards)).map(([cardId, cardData], index) =>
-            <SwiperSlide>
-                <RadixScratchCard
-
-                    // onScratch={() => scratchACard({
-                    //     accountAddress: get(account, ['address']),
-                    //     nftAddress,
-                    //     componentAddress,
-                    //     cardId,
-                    //     rdt,
-                    //     setState
-                    // })}
-                    // onClaim={() => {
-                    //     claimPrize({
-                    //         accountAddress: get(account, ['address']),
-                    //         nftAddress,
-                    //         componentAddress,
-                    //         cardId,
-                    //         rdt,
-                    //         xrdAddress: xrdResource,
-                    //         setState
-                    //     })
-                    // }}
-                    handleDragStart={handleDragStart}
-                    isScratched={get(cardData, ['is_scratched', 'value'])}
-                    isClaimed={get(cardData, ['is_claimed', 'value'])}
-                    prize={get(cardData, ["prize", "variant_name"])}
-                    cardId={cardId}
-                    index={index}
-                    key={index + cardId} />
-            </SwiperSlide>
-        )) || []
+        (Object.entries(usersCards))) || []
 
 
     useEffect(() => {
@@ -245,23 +213,77 @@ export const Buy = ({ }) => {
 
     }, [componentAddress])
 
+    const [cardId, cardData] = useMemo(() => get(radixScratchCards, [activeIndex], []), [activeIndex])
 
-    return <div>
-        <PageTitle label="Create Scratch Cards Batch" />
+
+    return <div style={{
+        height: "80vh",
+        margin: "0 50%"
+    }}>
+        {/* <PageTitle label="Create Scratch Cards Batch" /> */}
 
         <div className={styles.container}>
-            <Button onClick={() => buyScratchCard({
-                setState,
-                rdt,
-                xrdResource,
-                nftAddress,
-                componentAddress,
-                accountAddress: account && account.address,
-            })} id="purchaseButton">Buy ScratchCard</Button>
+            <Button
+                style={{
+                    borderRadius: "50%",
+                    backgroundColor: "gold",
+                    width: "8rem",
+                    height: "8rem",
+                    fontColor: "white"
+                }}
+                onClick={() => buyScratchCard({
+                    setState,
+                    rdt,
+                    xrdResource,
+                    nftAddress,
+                    componentAddress,
+                    accountAddress: account && account.address,
+                })} id="purchaseButton">Buy ScratchCard</Button>
         </div>
         <div className={styles.container}>
             <h4 className={styles.myCardsTitle}>My Cards </h4>
-            <ScratchCardsCarousel openModal={openModal} closeModal={closeModal} items={radixScratchCards} />
+            <ScratchCardsCarousel items={radixScratchCards}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
+                onClick={openModal}
+            />
         </div>
+
+        <ScratchModal modalIsOpen={modalIsOpen}
+            afterOpenModal={afterOpenModal}
+            closeModal={closeModal}>
+            <div style={{flex: 1}}>
+
+                <h1>Scratch Your Card</h1>
+                <RadixScratchCard
+                    isScratched={get(cardData, ['is_scratched', 'value'])}
+                    isClaimed={get(cardData, ['is_claimed', 'value'])}
+                    prize={get(cardData, ["prize", "variant_name"])}
+                    cardId={cardId}
+                    index={activeIndex}
+                    inPresentationMode
+                    onScratch={() => scratchACard({
+                        accountAddress: get(account, ['address']),
+                        nftAddress,
+                        componentAddress,
+                        cardId,
+                        rdt,
+                        setState
+                    })}
+                    onClaim={() => {
+                        claimPrize({
+                            accountAddress: get(account, ['address']),
+                            nftAddress,
+                            componentAddress,
+                            cardId,
+                            rdt,
+                            xrdAddress: xrdResource,
+                            setState
+                        })
+                    }}
+                />
+            </div>
+
+        </ScratchModal>
     </div >
 }

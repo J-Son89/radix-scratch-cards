@@ -13,19 +13,15 @@ export const RadixScratchCard = ({
   isClaimed,
   prize,
   handleDragStart,
-  isScratchable
-
+  inPresentationMode,
+  onClickPreview
 }) => {
-  // const [percent, setPercent] = useState("0%")
-  // const [isScratchedOnce, setScratchedOnce] = useState(false)
-
 
 
   useEffect(() => {
-
     const container = document.getElementById(`#js--sc--container${index}`)
     const isCanvasAlreadyThere = container.getElementsByClassName('sc__canvas').length > 0;
-    if (!isCanvasAlreadyThere &&  isScratchable ) {
+    if (!isCanvasAlreadyThere && inPresentationMode) {
       const sc = new ScratchCard(container, {
         scratchType: SCRATCH_TYPE.BRUSH,
         containerWidth: 300,
@@ -39,12 +35,10 @@ export const RadixScratchCard = ({
 
       const initScratching = async () => {
         sc.init().then(() => {
-          if (isScratchable) {
-            sc.canvas.addEventListener('scratch.move', () => {
-              let newPercent = sc.getPercent().toFixed(0);
-              // setPercent(newPercent + '%');
-            })
-          }
+          
+          sc.canvas.addEventListener('scratch.move', () => {
+            let newPercent = sc.getPercent().toFixed(0);
+          })
         }).catch((error) => {
           alert(error.message);
         });
@@ -57,17 +51,19 @@ export const RadixScratchCard = ({
   return (
     <>
       <div className={styles.outerContainer} handleDragStart={handleDragStart}>
-        {isClaimed && <div className={styles.claimed} ><p>Claimed</p></div>}
-        <div className={styles.sc__wrapper}>
+        {inPresentationMode && isClaimed && <div className={styles.claimed} ><p>Claimed</p></div>}
+        <div className={styles.sc__wrapper} >
           <p className={styles.cardId}>{cardId}</p>
-          {!isScratched && (<div className={styles.signAndScratch}>
+          {inPresentationMode && !isScratched && (<div className={styles.signAndScratch}>
             <button className={styles.signAndScratchBtn}
               onClick={onScratch}
             >Sign & Scratch</button>
           </div>)}
           <div id={`#js--sc--container${index}`} className={styles.sc__container}>
-            <p className={styles.prize}>{prize}</p>
-            {/* <img src={'./scratchcard-background.png'} className={styles.sc__img} /> */}
+           {inPresentationMode && <p className={styles.prize}>{prize}</p>}
+            {!inPresentationMode && <img 
+            draggable="false"
+            src={'./scratchcard.png'} className={styles.sc__img} /> }
           </div>
 
         </div>
