@@ -13,6 +13,7 @@ import {
     get_users_cards_ids,
     get_users_cards_data
 } from '../../api';
+import Carousel from 'react-spring-3d-carousel';
 
 const buyScratchCard = async ({
     componentAddress,
@@ -150,12 +151,12 @@ export const Customer = () => {
 
 
     return <div className={styles.container}>
-        <ScratchCardsCarousel
+        {radixScratchCards && <ScratchCardsCarousel
             items={radixScratchCards}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
             onClick={openModal}
-        />
+        />}
 
         <PurchaseButton
             onClick={() => buyScratchCard({
