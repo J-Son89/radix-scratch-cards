@@ -6,6 +6,18 @@ import { SCRATCH_TYPE, ScratchCard } from 'scratchcard-js';
 
 import ReactScratchCard from 'react-scratchcard-v2';
 
+const getPrizeImage = (prize) => {
+  if (prize === "OneHundredX") {
+    return styles.hugeprize
+  }
+  if (prize === "TenX") {
+    return styles.smallprize
+  }
+  if (prize === "FreeCard") {
+    return styles.freecard
+  }
+  return styles.loser
+}
 
 export const RadixScratchCard = ({
   cardId,
@@ -20,52 +32,37 @@ export const RadixScratchCard = ({
 }) => {
 
   const ref = useRef(null);
-  const brushSize = inPresentationMode? 30:0;
-
+  const brushSize = inPresentationMode ? 30 : 0;
+  console.log(prize, "PRIZE")
   return (
-<div className={styles.outerContainer} >
+    <>
 
-      
-      <ReactScratchCard
-       
-        width={200}
-        height={200}
-        image={'./scratchcard.png'}
+      <div className={styles.outerContainer} />
+      {<ReactScratchCard
+        style={{
+          position: "relative",
+          borderRadius: "20px",
+        }}
+        width={350}
+        height={350}
+        image={'./scratchcard3.png'}
         finishPercent={80}
         onComplete={claim}
         customBrush={{
           image: './brush.png',
           width: brushSize,
           height: brushSize
-        }}
-      >
-        <div style={{
-          display: 'flex',
-    
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-        >
-            {inPresentationMode && <p className={styles.prize}>{prize}</p>}
-        </div>
-      </ReactScratchCard>
+        }}>
+        {inPresentationMode &&
+          <div className={styles.prizeImgContainer}>
+            <image
+              className={cx(styles.prizeImg, getPrizeImage(prize))}
+            
+            >
+            </image>
+          </div>}
+      </ReactScratchCard>}
 
-    </div>
-    //   <div className={styles.outerContainer} handleDragStart={handleDragStart}>
-    //     {inPresentationMode && isClaimed && <div className={styles.claimed} ><p>Claimed</p></div>}
-    //     <div className={styles.sc__wrapper} >
-    //       <p className={styles.cardId}>{cardId}</p>
-
-    //       <div id={`#js--sc--container${index}`} className={styles.sc__container}>
-    //        {inPresentationMode && <p className={styles.prize}>{prize}</p>}
-    //         {!inPresentationMode && <img 
-    //         draggable="false"
-    //         src={'./scratchcard.png'} className={styles.sc__img} /> }
-    //       </div>
-
-    //     </div>
-    //   </div>
-
-    // </>
+    </>
   );
 };

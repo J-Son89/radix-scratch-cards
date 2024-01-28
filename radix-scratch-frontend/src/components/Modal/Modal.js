@@ -9,6 +9,7 @@ export const ScratchModal = ({
 }) => {
     return (
         <Modal
+        id="modal"
             isOpen={modalIsOpen}
             onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
@@ -16,13 +17,22 @@ export const ScratchModal = ({
                 overlay: {
                     zIndex: 100,
                     border: "2px solid #fa7d09",
-                }
+                    margin: "auto",
+
+                    position: "fixed", /* Stay in place */
+                    left: 0,
+                    top: 0,
+                    overflow: "auto", /* Enable scroll if needed */
+                    backgroundColor: "rgba(0,0,0,0.4)", /* Black w/ opacity */
+                },
+                content: {
+                  }
             }}
             contentLabel="Card Viewer"
         >
-                  <div className={styles.container}>
+            <div className={styles.container}>
 
-            {children}
+                {children}
             </div>
         </Modal>
     );

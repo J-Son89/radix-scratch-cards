@@ -174,8 +174,6 @@ export const Customer = () => {
             afterOpenModal={afterOpenModal}
             closeModal={closeModal}>
             <div style={{ flex: 1 }}>
-
-                <h1>Scratch Your Card</h1>
                 <RadixScratchCard
                     isClaimed={get(cardData, ['is_claimed', 'value'])}
                     prize={get(cardData, ["prize", "variant_name"])}
@@ -195,7 +193,6 @@ export const Customer = () => {
                     }}
                 />
             </div>
-
         </ScratchModal>
     </div >
 }
