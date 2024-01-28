@@ -7,6 +7,56 @@ body {
   width: auto;
 }
 
+.pageContainer {
+  height: 80vh;
+  background-image: url("../public/background.png");
+}
+
+.ScratchCard__Canvas {
+  position: relative !important;
+  /* Other styles for positioning, width, height, etc. */
+  border-radius: 20px; /* Adjust as necessary to match the desired curvature */
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.25), /* Larger, softer shadow */
+    0 0 0 6px #2a2a2a, /* Dark outer border */
+    0 0 0 10px #555, /* Lighter border for 3D edge effect */
+    inset 0 2px 4px rgba(255, 255, 255, 0.5), /* Inner highlight for depth */
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25); /* Inner lowlight for depth */
+  transition: box-shadow 0.3s ease;
+  width: 350px;
+  height: 350px;
+}
+
+.ScratchCard__Canvas:hover {
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.25), 
+    0 0 0 6px #2a2a2a,
+    0 0 0 10px #555,
+    inset 0 2px 4px rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.ScratchCard__Result {
+  position: absolute;
+  top:0;
+}
+
+#modal{
+  position: absolute;
+  inset: 100px !important;
+  border: 1px solid rgb(204, 204, 204) !important;
+  background: rgb(255, 255, 255) !important; 
+  overflow: auto !important;
+  border-radius: 4px;
+  outline: none;
+  background-color: rgba(0,0,0,0.5) !important;
+  margin: 0 0rem 4rem !important;
+  padding-top: 2rem !important;
+  align-items: center;
+  padding-left: 3rem !important;
+}
+
+
 
 @font-face {
   font-family: "Poppins-ExtraBold";

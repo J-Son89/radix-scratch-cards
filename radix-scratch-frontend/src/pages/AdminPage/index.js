@@ -5,6 +5,7 @@ import styles from './style.module.css';
 import { PageTitle } from "../../components/PageTitle/PageTitle";
 import { Input } from "../../components/Input/Input";
 import { Button } from "../../components/Button/Button";
+import { fundPrizePoolManifest } from "../../manifests/fundPrizePool";
 
 // ************ Instantiate component and fetch component and resource addresses ************
 const instantiateComponent = async function ({
@@ -13,7 +14,6 @@ const instantiateComponent = async function ({
     setState,
     rdt
 }) {
-    console.log(accountAddress)
 
     const manifest = instantiateManifest(
         packageAddress,
@@ -53,32 +53,74 @@ const instantiateComponent = async function ({
         ownerBadgeAddress,
         adminResourceAddress,
     }))
-    // Show the addresses on the page
-    // showAddresses();
-    // Update the gumball amount and earnings displayed on the page
-    // fetchAndShowGumballMachineState();
 };
 
-export const InstantiatePage = () => {
+const fundPrizePool = async function ({
+    componentAddress,
+    accountAddress,
+    investmentAmount,
+    xrdAddress,
+    rdt
+}) {
+    console.log(accountAddress)
+
+    const manifest = fundPrizePoolManifest({
+        accountAddress,
+        xrdAddress,
+        investmentAmount,
+        componentAddress
+    })
+    console.log("Funding Prize Pool: ", manifest);
+
+    // Send manifest to wallet for signing
+    const result = await rdt.walletApi.sendTransaction({
+        transactionManifest: manifest,
+        version: 1,
+    });
+    if (result.isErr()) throw result.error;
+    console.log("Funding Result: ", result.value);
+
+    // Fetch the transaction status from the Gateway API
+    const transactionStatus = await rdt.gatewayApi.transaction.getStatus(
+        result.value.transactionIntentHash
+    );
+    console.log("Funding transaction status:", transactionStatus);
+
+    // Fetch the details of changes committed to ledger from Gateway API
+    const committedDetails = await rdt.gatewayApi.transaction.getCommittedDetails(
+        result.value.transactionIntentHash
+    );
+    console.log("Funding committed details:", committedDetails);
+};
+
+export const AdminPage = () => {
     const [{
-        
+
         rdt,
         account,
         componentAddress,
         ownerBadgeAddress,
         packageAddress,
-        adminResourceAddress },setState] = useContext(appState);
+        xrdResource,
+        adminResourceAddress }, setState] = useContext(appState);
     return <div>
-        <PageTitle label="Instantiate ScratchCard Batch"/>
+        <PageTitle label="Admin Page" />
 
         <div className="flex">
-            <Input  placeholder="package address"/>
             <Button onClick={() => instantiateComponent({
                 setState,
                 rdt,
                 accountAddress: account && account.address,
                 packageAddress
-                })} id="instantiateComponent">Instantiate Component</Button>
+            })} id="instantiateComponent">Instantiate Component</Button>
+
+            <Button onClick={() => fundPrizePool({
+                componentAddress,
+                investmentAmount: "1000",
+                xrdAddress:xrdResource,
+                rdt,
+                accountAddress: account && account.address,
+            })} id="fundPrizePool">Fund Prize Pool</Button>
         </div>
         <div className={styles.detailContainer}>
             <p>Component address:</p>
@@ -92,5 +134,7 @@ export const InstantiatePage = () => {
             <p>Admin resource address:</p>
             <pre id="adminResourceAddress">{adminResourceAddress || "None"}</pre>
         </div>
+
+
     </div >
 }

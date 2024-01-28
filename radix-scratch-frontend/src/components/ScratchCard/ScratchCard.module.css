@@ -1,100 +1,104 @@
-.outerContainer {
-  position: relative;
-  max-width: 300px;
-
-}
-
-.sc__inner {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.sc__wrapper {
-  display: block;
-  width: 100%;
-  height: 300px;
-  max-width: 300px;
-  margin: 0 auto;
-  border: 5px solid white;
-}
-
-.sc__container {
-  position: relative;
-  overflow: hidden;
-  height: 300px;
-  max-width: 300px;
-}
-
-.sc__img {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-}
-
-.sc__container canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-}
-
-.sc__infos {
-  color: white;
-  text-align: center;
-  height: 40px;
-  line-height: 40px;
-  margin-top: 5px;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.signAndScratch {
-  border-radius: 50%;
-  text-align: center;
-  margin-top: 15%;
-  z-index: 2;
-}
-
-.signAndScratchBtn {
-  flex: 1;
-  background-color: tomato;
-
-  border-radius: 50%;
-  width: 10rem;
-  height: 10rem;
-  text-decoration-color: white;
-}
-
 .cardId {
   position: absolute;
-  color: white;
-  top: 20px;
-  left: 20px;
+  color: black;
+  top: 269px;
+  left: 72px;
   bottom: 0;
   right: 0;
-  z-index: 2;
+  z-index: 5;
   pointer-events: none;
+  width: 32px; /* Size of the circle */
+  height: 32px; /* Size of the circle */
+  border-radius: 50%; /* Make it round */
+  background-color: #f0f0f0; /* Light background color */
+  color: #2a2a2a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px; /* Adjust based on your design */
+  font-family: 'Arial', sans-serif;
+  font-weight: bold; 
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Sunken effect */
+  border: 1px solid #ccc; /* Optional: adds a subtle border */
 }
 
 .claimed {
-  color:red;
+  color: red;
   position: absolute;
   top: 20px;
   left: 20px;
   background-color: black;
   height: 60px;
-  width: 80px; 
-  z-index: 4; 
+  width: 80px;
+  z-index: 4;
 }
 
 .prize {
-  color:gold;
+  color: gold;
   margin-top: 20px;
   text-align: center;
+}
+
+.prizeImgContainer {
+  width: 350px; /* or the width you desire */
+  height: 350px; /* or the height you desire */
+  position: relative;
+  /* padding-top: 56.25%;  */
+  /* overflow: hidden; */
+}
+
+
+.prizeImg {
+  --image-src: url("../../../public/loser.png");
+  background-image: var(--image-src);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  background-size:contain;
+  border-radius: 20px;
+}
+
+.unClaimed {
+  --image-src: url("../../../public/scratchcard3.png");
+}
+
+
+.loser {
+  --image-src: url("../../../public/loser.png");
+}
+
+.hugeprize {
+  --image-src: url("../../../public/hugeprize.png");
+}
+
+.smallprize {
+  --image-src: url("../../../public/smallprize2.png");
+}
+.freecard {
+  --image-src: url("../../../public/freecard.png");
+
+}
+
+.previewContainer {
+  position: relative !important;
+  /* Other styles for positioning, width, height, etc. */
+  border-radius: 20px; /* Adjust as necessary to match the desired curvature */
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.25), /* Larger, softer shadow */
+    0 0 0 6px #2a2a2a, /* Dark outer border */
+    0 0 0 10px #555, /* Lighter border for 3D edge effect */
+    inset 0 2px 4px rgba(255, 255, 255, 0.5), /* Inner highlight for depth */
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25); /* Inner lowlight for depth */
+  transition: box-shadow 0.3s ease;
+  width: 350px;
+  height: 350px;
+}
+
+.previewContainer:hover {
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.25), 
+    0 0 0 6px #2a2a2a,
+    0 0 0 10px #555,
+    inset 0 2px 4px rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25);
 }

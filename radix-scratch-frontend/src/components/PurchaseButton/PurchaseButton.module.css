@@ -1,0 +1,43 @@
+.purchaseBtn {
+    font-family: 'Roboto', sans-serif; 
+    font-size: 2.2rem; 
+    color: #FFFFFF; 
+    background-image: linear-gradient(to right, #00B4DB, #0083B0); /* Example gradient from teal to a deeper blue */
+    border: none; 
+    border-radius: 50%;
+    padding: 10px 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    padding: 10px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 10rem;
+    width: 10rem;
+    position: relative;
+  }
+  
+  .purchaseBtn:hover {
+    background-image: linear-gradient(to right,  #00B4B4, #0083B0,);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 0 0 0.1px #000; /* Maintain inner border on hover */
+  }
+
+  .innerContainer {
+    /* margin: 4px; */
+    position: absolute;
+    top:.25rem;
+    left:.25rem;
+    box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2), inset 0 0 0 2px #0081B9; /* Adding inner border */
+    border-radius: 50%;
+    height: 9.5rem;
+    width: 9.5rem;
+  }
+
+  .nowContainer {
+    background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white for contrast */
+    border-radius: 20px; /* Rounded corners for the background */
+    padding: 2px 6px; /* Slightly less padding than the button itself */
+    margin-top: 4px; /* Space between 'Buy' and 'NOW' */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+  
+}
+

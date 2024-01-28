@@ -1,53 +1,59 @@
 import { useMemo } from 'react';
-import 'react-alice-carousel/lib/alice-carousel.css';
 import { RadixScratchCard } from "../ScratchCard/ScratchCard";
 import { get } from 'lodash';
 import { useState } from 'react';
 import cx from 'classnames'
 import styles from "./ScratchCardsCarousel.module.css";
+import Carousel from 'react-spring-3d-carousel';
+import { config } from "react-spring";
+
+
 
 
 export const ScratchCardsCarousel = ({ items, activeIndex, setActiveIndex, onClick }) => {
-  const [cardId, cardData] = useMemo(() => get(items, [activeIndex], []), [activeIndex])
+  // const [cardId, cardData] = useMemo(() => get(items, [activeIndex], []), [items,activeIndex])
+  const [carouselState, setCarouselState] = useState(
+    {
+      goToSlide: 0,
+      offsetRadius: 1,
+      showNavigation: true,
+      enableSwipe: true,
+      config: config.gentle
+    }
+  )
 
-  const showLeftArrow = activeIndex > 0
-  const showRightArrow = activeIndex < items.length - 1
+   
+  const slides = items.map(([cardId, cardData], index) =>
+  ({
+    key: "Scratchard" + cardId,
+    content:
+      <RadixScratchCard
+        onClickPreview={() =>{
+          if(activeIndex === index){
+            
+            onClick()
+          }
+          else{
+            setActiveIndex(index)
+         }}}
+        isClaimed={get(cardData, ['is_claimed', 'value'])}
+        prize={get(cardData, ["prize", "variant_name"])}
+        cardId={cardId}
+        index={activeIndex}
+      />
+  }))
 
-  return (
-    <div>
-      {cardId &&
-        <div style={{
-          position: "absolute",
-          left: "Calc(50% - 6rem)",
-          display: "flex"
-        }}>
-          <div className={styles.btnContainer}>
-            {showLeftArrow && <button
-              onClick={() => setActiveIndex(activeIndex - 1)}
-              className={cx(styles.right, styles.arrow)} />}
-          </div>
-          <div 
-           onClick={onClick}
-          style={{
-            width: "20rem",
-            height: "20rem",
-           
-          }}>
-            <RadixScratchCard
-              isScratched={get(cardData, ['is_scratched', 'value'])}
-              isClaimed={get(cardData, ['is_claimed', 'value'])}
-              prize={get(cardData, ["prize", "variant_name"])}
-              cardId={cardId}
-              index={activeIndex} 
-              // onClickPreview={}
-              />
-          </div>
-          <div className={styles.btnContainer}>
-            {showRightArrow && <button
-              onClick={() => setActiveIndex(activeIndex + 1)}
-              className={styles.arrow} />}
-          </div>
-        </div>}
-    </div>
-  );
+  return <div className={styles.container}
+
+  >
+    <Carousel
+      slides={slides}
+      goToSlide={activeIndex}
+      offsetRadius={carouselState.offsetRadius}
+      showNavigation={carouselState.showNavigation}
+      animationConfig={carouselState.config}
+    />
+  </div>
+
+
 }

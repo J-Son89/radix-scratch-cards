@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import {
@@ -6,9 +5,9 @@ import {
   DataRequestBuilder,
   RadixNetwork,
 } from "@radixdlt/radix-dapp-toolkit";
-import { InstantiatePage } from "./pages/InstantiatePage";
-import { CreateBatch } from './pages/CreateBatch';
-import { Buy } from './pages/Buy';
+import { AdminPage } from "./pages/AdminPage";
+import { SellerPage } from './pages/SellerPage';
+import { Customer } from './pages/Customer';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
@@ -19,25 +18,28 @@ Modal.setAppElement('#root');
 // ************ Connect to the Radix network ************
 // You can create a dApp definition in the dev console at https://stokenet-console.radixdlt.com/dapp-metadata
 // then use that account for your dAppDefinitionAddress
-const dAppDefinitionAddress =
-  "account_tdx_2_129veu2mmz00sea702ku0vgttd52x34m39dz0ldvs5h0lksask44t6t";
-//move to config
+const dAppDefinitionAddress = process.env.REACT_APP_DAPP_DEFINITION_ADDRESS;
+const xrdAddress = process.env.REACT_APP_XRD_ADDRESS
+
+
+const componentAddressGlobal = process.env.REACT_APP_COMPONENT_ADDRESS
+const ownerBadgeAddressGlobal = process.env.REACT_APP_OWNER_BADGE_ADDRESS
+const adminResourceAddressGlobal = process.env.REACT_APP_ADMIN_RESOURCE_ADDRESS_GLOBAL
+
+const applicationName = process.env.REACT_APP_APPLICATION_NAME;
+const applicationVersion = process.env.REACT_APP_APPLICATION_VERSION;
+const nftAddress = process.env.REACT_APP_NFT_ADDRESS;
+const packageAddress = process.env.REACT_APP_PACKAGE_ADDRESS;
+
+const sellerId = process.env.REACT_APP_SELLER_ID;
 
 // Instantiate DappToolkit to connect to the Radix network and wallet
 const rdt = RadixDappToolkit({
   dAppDefinitionAddress: dAppDefinitionAddress,
-  networkId: RadixNetwork.Stokenet,
-  applicationName: "RadixScratchDevDemo",
-  applicationVersion: "1.1.0",
+  networkId: process.env.REACT_APP_MAINNET === "1" ? RadixNetwork.Mainnet : RadixNetwork.Stokenet,
+  applicationName: applicationName,
+  applicationVersion: applicationVersion,
 });
-
-const xrdAddress =
-  "resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc"; //Stokenet XRD resource address
-
-
-const componentAddressGlobal = "component_tdx_2_1cpt9cy9j5mesmx8gdavay4k6r6j7ve8mzh4yjwueled8hey99fck2l"
-const ownerBadgeAddressGlobal = "consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29"
-const adminResourceAddressGlobal = "account_tdx_2_129veu2mmz00sea702ku0vgttd52x34m39dz0ldvs5h0lksask44t6t"
 
 function App() {
   const [state, setState] = useState({
@@ -59,27 +61,28 @@ function App() {
         walletData,
         account: walletData.accounts[0],
         rdt,
-        nftAddress: "resource_tdx_2_1nf736gc5vfugaf2axcwrugjh3wz864tfk29907mxn5890lwpfw3gdc",
-        packageAddress: "package_tdx_2_1pk0r36pwvch7s0s5f89mmg2dvruhgveg8xmc2xy32ztu5p0jn7xtp6",
+        nftAddress: nftAddress,
+        packageAddress: packageAddress,
         xrdResource: xrdAddress,
-        usersCards:{}
+        sellerId,
+        usersCards: {}
       }))
     })
-  },
-    [])
+  }, [])
 
   return (
     <AppStateProvider value={[state, setState]}>
       <div className="App">
         <Router>
           <Header />
-          <Routes>
-            <Route path="instantiatePage" element={<InstantiatePage />} />
-            <Route path="createBatch" element={<CreateBatch />} />
-            <Route path="buyPage" element={<Buy />} />
+          <div className="pageContainer">
 
-            CreateBatch
-          </Routes>
+            <Routes>
+              <Route path="" element={<Customer />} />
+              <Route path="adminPage" element={<AdminPage />} />
+              <Route path="sellerPage" element={<SellerPage />} />
+            </Routes>
+          </div>
           <Footer />
         </Router>
 

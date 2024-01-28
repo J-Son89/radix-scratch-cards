@@ -20,16 +20,16 @@ export const Header = ({ }) => {
     >
       <IconLink />
 
-      <Link className={cx(styles.normalLink, styles.firstLink)} to={"instantiatePage"}>
-        Instantiate
+      {/* <Link className={cx(styles.normalLink, styles.firstLink)} to={"adminPage"}>
+        Admin
       </Link>
-      <Link className={styles.normalLink} to={"createBatch"}>
-        Make Batch
+      <Link className={styles.normalLink} to={"sellerPage"}>
+        Seller
       </Link>
-      <Link className={cx(styles.normalLink, styles.firstLink)} to={"buyPage"}>
+      <Link className={cx(styles.normalLink, styles.firstLink)} to={""}>
         Buy Page
       </Link>
-    
+     */}
 
       <div className={styles.detailContainer}>
         <p>Account Name:</p>
