@@ -61,20 +61,6 @@ export const claimPrize = async ({
         transactionManifest: manifest,
         version: 1,
     })
-    // if (result.isErr()) throw result.error;
-    console.log("Claim Result: ", result.value);
-
-    // Fetch the transaction status from the Gateway API
-    const transactionStatus = await rdt.gatewayApi.transaction.getStatus(
-        result.value.transactionIntentHash
-    );
-    console.log("Claim transaction status:", transactionStatus);
-
-    // Fetch the details of changes committed to ledger from Gateway API
-    const committedDetails = await rdt.gatewayApi.transaction.getCommittedDetails(
-        result.value.transactionIntentHash
-    );
-    console.log("Claim transaction status:", committedDetails);
 
 
     setState(prev => {
@@ -151,12 +137,19 @@ export const Customer = () => {
 
 
     return <div className={styles.container}>
-        {radixScratchCards && <ScratchCardsCarousel
+        {radixScratchCards.length>0 ? 
+        <ScratchCardsCarousel
             items={radixScratchCards}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
             onClick={openModal}
-        />}
+        /> : 
+         <div className={styles.loaderContainer}>
+         <div className={styles.cardLoader}>
+            <div className={styles.loader}></div>
+            </div>
+        </div>
+        }
 
         <PurchaseButton
             onClick={() => buyScratchCard({

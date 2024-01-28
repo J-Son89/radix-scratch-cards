@@ -23,7 +23,7 @@ export const ScratchModal = ({
                     left: 0,
                     top: 0,
                     overflow: "auto", /* Enable scroll if needed */
-                    backgroundColor: "rgba(0,0,0,0.4)", /* Black w/ opacity */
+                    backgroundColor: "rgba(0,0,0,0.8)", /* Black w/ opacity */
                 },
                 content: {
                   }

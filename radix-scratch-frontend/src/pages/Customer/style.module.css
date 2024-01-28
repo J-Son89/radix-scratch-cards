@@ -13,3 +13,64 @@
 .myCardsTitle{
     color:white;
 }
+
+.loaderContainer{
+    width: 41vw;
+    height: 50vh;
+    display: flex;
+justify-content: center;
+ align-items: center;
+}
+
+.cardLoader {
+    background-image: url("../../../public/scratchcard3.png");
+    background-size: contain;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* Light background for the loader card */
+
+    /* Other styles for positioning, width, height, etc. */
+    border-radius: 20px; /* Adjust as necessary to match the desired curvature */
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.25), /* Larger, softer shadow */
+      0 0 0 6px #2a2a2a, /* Dark outer border */
+      0 0 0 10px #555, /* Lighter border for 3D edge effect */
+      inset 0 2px 4px rgba(255, 255, 255, 0.5), /* Inner highlight for depth */
+      inset 0 -2px 4px rgba(0, 0, 0, 0.25); /* Inner lowlight for depth */
+    transition: box-shadow 0.3s ease;
+    width: 350px;
+    height: 350px;
+
+  }
+  
+  .loader {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #3498db; /* Loader color */
+    animation: pulse 2s infinite ease-in-out;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0.5;
+    }
+  }
+  
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }

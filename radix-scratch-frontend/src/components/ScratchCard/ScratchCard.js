@@ -6,10 +6,10 @@ import { SCRATCH_TYPE, ScratchCard } from 'scratchcard-js';
 
 import ReactScratchCard from 'react-scratchcard-v2';
 
-const getPrizeImage = (prize, isClaimed) => {
-   if(!isClaimed){
+const getPrizeImage = (prize, isClaimed, inPresentationMode) => {
+  if (!isClaimed && !inPresentationMode) {
     return styles.unClaimed
-   }
+  }
 
   if (prize === "OneHundredX") {
     return styles.hugeprize
@@ -22,6 +22,24 @@ const getPrizeImage = (prize, isClaimed) => {
   }
   return styles.loser
 }
+
+const getScratchCardImage = (isClaimed, prize) => {
+  if (!isClaimed) {
+    return './scratchcard3.png'
+  }
+
+  if (prize === "OneHundredX") {
+    return './hugeprize.png'
+  }
+  if (prize === "TenX") {
+    return './smallprize.png'
+  }
+  if (prize === "FreeCard") {
+    return './freecard.png'
+  }
+  return styles.loser
+}
+
 
 export const RadixScratchCard = ({
   cardId,
@@ -36,26 +54,23 @@ export const RadixScratchCard = ({
 }) => {
 
   const ref = useRef(null);
-  const brushSize = inPresentationMode ? 30 : 0;
+  const brushSize = 30;
 
   const previewScreen = <div className={styles.previewContainer} onClick={onClickPreview} >
     <div className={styles.prizeImgContainer}>
-      <image
-        className={cx(styles.prizeImg, 
-           
-           getPrizeImage(prize, isClaimed))}
+      <img
+        className={cx(styles.prizeImg,
+          getPrizeImage(prize, isClaimed, inPresentationMode))}
       >
-      </image>
+      </img>
       <span className={styles.cardId}>{cardId}</span>
     </div>
   </div>
 
   return (
     <>
-
       <div className={styles.outerContainer} />
       {inPresentationMode ?
-
         <ReactScratchCard
           style={{
             position: "relative",
@@ -63,21 +78,24 @@ export const RadixScratchCard = ({
           }}
           width={350}
           height={350}
-          image={'./scratchcard3.png'}
+          image={getScratchCardImage(isClaimed, prize)}
           finishPercent={80}
-          onComplete={claim}
+          onComplete={() => {
+
+            claim()
+          }}
           customBrush={{
             image: './brush.png',
             width: brushSize,
             height: brushSize
           }}>
+          <span className={styles.cardId}>{cardId}</span>
           {inPresentationMode &&
             <div className={styles.prizeImgContainer}>
-              <image
-                className={cx(styles.prizeImg, getPrizeImage(prize))}
-
+              <img
+                className={cx(styles.prizeImg, getPrizeImage(prize, isClaimed, inPresentationMode))}
               >
-              </image>
+              </img>
             </div>}
         </ReactScratchCard> :
         previewScreen
